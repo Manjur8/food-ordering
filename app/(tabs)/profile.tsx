@@ -1,7 +1,7 @@
 import CustomButton from '@/components/CustomButton';
 // import { signOut } from '@/lib/appwrite';
 // import useAuthStore from '@/store/auth.store';
-// import { router } from "expo-router";
+import { router } from "expo-router";
 import React, { useState } from 'react';
 import { Alert, Image, Text, View } from 'react-native';
 
@@ -12,7 +12,7 @@ export default function Profile() {
     setIsLoggingOut(true);
     try {
         // await signOut();
-        // router.replace('/sign-in');
+        router.replace('/sign-in');
     } catch(error: any) {
         Alert.alert('Error', error.message);
     } finally {
