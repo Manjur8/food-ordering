@@ -4,9 +4,11 @@ import { Redirect, Slot } from "expo-router";
 import { Dimensions, Image, ImageBackground, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 
 export default function AuthLayout() {
-    const { isAuthenticated } = useAuthStore();
+    const { isAuthenticated, isLoading } = useAuthStore();
 
     if(isAuthenticated) return <Redirect href="/" />
+
+    if(isLoading) return null;
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>

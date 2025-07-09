@@ -1,17 +1,19 @@
 import CustomButton from '@/components/CustomButton';
-// import { signOut } from '@/lib/appwrite';
-// import useAuthStore from '@/store/auth.store';
+import { signOut } from '@/lib/appWrite';
+import useAuthStore from '@/store/auth.store';
 import { router } from "expo-router";
 import React, { useState } from 'react';
 import { Alert, Image, Text, View } from 'react-native';
 
 export default function Profile() {
-  // const { user  } = useAuthStore();
+  const { setAuthenticated, user  } = useAuthStore();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-        // await signOut();
+        await signOut();
+        setAuthenticated(null)
         router.replace('/sign-in');
     } catch(error: any) {
         Alert.alert('Error', error.message);
@@ -23,11 +25,11 @@ export default function Profile() {
   return (
     <View className="flex-1 items-center justify-center bg-white px-4">
       <Image
-        source={{ uri: 'https://i.pravatar.cc/300' }} // Replace with dynamic user image
+        source={{ uri: user?.avatar + `?name=${user?.name}` }} // Replace with dynamic user image
         className="w-32 h-32 rounded-full border-2 border-gray-300 mb-6"
         resizeMode="cover"
       />
-      <Text className="text-2xl font-semibold mb-6">John Doe</Text>
+      <Text className="text-2xl font-semibold mb-6">{user?.name}</Text>
 
       {/* <TouchableOpacity
         onPress={handleLogout}
@@ -37,7 +39,7 @@ export default function Profile() {
       </TouchableOpacity> */}
 
       <CustomButton
-        title="Log Out" style={"bg-red-500"}
+        title="Log Out" style={"bg-primary"}
         isLoading={isLoggingOut}
         onPress={handleLogout}
       />

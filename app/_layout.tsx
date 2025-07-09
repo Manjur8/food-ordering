@@ -3,10 +3,11 @@ import { SplashScreen, Stack } from 'expo-router';
 import 'react-native-reanimated';
 import "./globals.css";
 
+import useAuthStore from '@/store/auth.store';
 import { useEffect } from 'react';
 
 export default function RootLayout() {
-  // const colorScheme = useColorScheme();
+  const {isLoading, fetchAuthenticatedUser} = useAuthStore()
   const [fontsLoaded, error] = useFonts({
     "QuickSand-Bold": require('@/assets/fonts/Quicksand-Bold.ttf'),
     "QuickSand-Medium": require('@/assets/fonts/Quicksand-Medium.ttf'),
@@ -20,7 +21,12 @@ export default function RootLayout() {
     if(fontsLoaded) SplashScreen.hideAsync();
   }, [fontsLoaded, error]);
 
-  if (!fontsLoaded) {
+  useEffect(() => {
+    fetchAuthenticatedUser();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  if (!fontsLoaded && isLoading) {
     // Async font loading only occurs in development.
     return null;
   }
