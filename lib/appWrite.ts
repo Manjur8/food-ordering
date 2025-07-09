@@ -38,7 +38,7 @@ export async function signIn(email: string, password: string) {
     }
 }
 
-export async function signUp(email: string, password: string, name: string) {
+export async function createUser(email: string, password: string, name: string) {
     try {
         const newAccount = await account.create(ID.unique(), email, password, name);
         if(!newAccount) throw new Error

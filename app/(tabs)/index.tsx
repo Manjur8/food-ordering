@@ -1,11 +1,16 @@
 import { images, offers } from "@/constants";
+import useAuthStore from "@/store/auth.store";
 import cn from 'clsx';
+import { Redirect } from "expo-router";
 import { Fragment } from 'react';
 import { FlatList, Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function Home() {
+  const { isAuthenticated } = useAuthStore();
+
+  if(!isAuthenticated) return <Redirect href={'/sign-in'} />
   return (
      <SafeAreaView className="flex-1 bg-white">
           <FlatList

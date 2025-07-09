@@ -1,13 +1,13 @@
 import CustomButton from "@/components/CustomButton";
 import CustomInput from "@/components/CustomInput";
+import { signIn } from "@/lib/appWrite";
+import useAuthStore from "@/store/auth.store";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import { Alert, Text, View } from 'react-native';
-// import {signIn} from "@/lib/appwrite";
-// import useAuthStore from '@/store/auth.store';
-// import { User } from '@/type';
 
 const SignIn = () => {
+    const {setAuthenticated} = useAuthStore();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [form, setForm] = useState({ email: '', password: '' });
 
@@ -20,8 +20,8 @@ const SignIn = () => {
         setIsSubmitting(true)
 
         try {
-            // const user = await signIn({ email, password });
-            // setAuthenticated(user as unknown as User); // ✅ update Zustand store
+            const user = await signIn(email, password);
+            setAuthenticated(user); // ✅ update Zustand store
             router.replace('/');
         } catch(error: any) {
             Alert.alert('Error', error.message);

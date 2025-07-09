@@ -1,9 +1,3 @@
-export interface TabBarIconProps {
-    focused: boolean;
-    icon: ImageSourcePropType;
-    title: string;
-}
-
 interface CustomButtonProps {
     onPress?: () => void;
     title?: string;
@@ -20,4 +14,15 @@ interface CustomInputProps {
     label: string;
     secureTextEntry?: boolean;
     keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
+}
+export interface TabBarIconProps {
+    focused: boolean;
+    icon: ImageSourcePropType;
+    title: string;
+}
+
+interface User extends Models.Document {
+    name: string;
+    email: string;
+    avatar: string;
 }
