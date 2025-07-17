@@ -66,3 +66,12 @@ interface GetMenuParams {
     category: string;
     query: string;
 }
+
+interface CartItemType {
+    id: string; // menu item id
+    name: string;
+    price: number;
+    image_url: string;
+    quantity: number;
+    customizations?: CartCustomization[];
+}
