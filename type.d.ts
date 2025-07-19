@@ -75,3 +75,14 @@ interface CartItemType {
     quantity: number;
     customizations?: CartCustomization[];
 }
+
+interface CustomHeaderProps {
+    title?: string;
+}
+
+interface PaymentInfoStripeProps {
+    label: string;
+    value: string;
+    labelStyle?: string;
+    valueStyle?: string;
+}
