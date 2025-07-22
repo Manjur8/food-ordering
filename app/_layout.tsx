@@ -4,6 +4,7 @@ import 'react-native-reanimated';
 import "./globals.css";
 
 import useAuthStore from '@/store/auth.store';
+import { StripeProvider } from '@stripe/stripe-react-native';
 import { useEffect } from 'react';
 
 export default function RootLayout() {
@@ -31,5 +32,11 @@ export default function RootLayout() {
     return null;
   }
 
-   return <Stack screenOptions={{ headerShown: false }} />;
+   return <StripeProvider
+              publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
+              merchantIdentifier="merchant.foodordering.com" // required for Apple Pay
+              urlScheme="foodordering" // required for 3D Secure and bank redirects
+            >
+              <Stack screenOptions={{ headerShown: false }} />
+            </StripeProvider>;
 }
