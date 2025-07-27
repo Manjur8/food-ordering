@@ -71,6 +71,14 @@ export default function TabLayout() {
                     tabBarIcon: ({ focused }) => <TabBarIcon title="Profile" icon={images.person} focused={focused} />
                 }}
             />
+            <Tabs.Screen
+                name='order-confirmation'
+                options={{
+                    // tabBarButton: () => null,
+                    // tabBarStyle: { display: 'none' }
+                    href: null,
+                }}
+            />
         </Tabs>
     );
 }
