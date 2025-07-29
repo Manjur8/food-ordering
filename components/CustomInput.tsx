@@ -9,14 +9,15 @@ const CustomInput = ({
     onChangeText,
     label,
     secureTextEntry = false,
-    keyboardType="default"
+    keyboardType="default",
+    billInfo=false,
+    ...rest
 }: CustomInputProps) => {
     const [isFocused, setIsFocused] = useState(false);
 
-
     return (
         <View className="w-full">
-            <Text className="label">{label}</Text>
+            <Text className={billInfo ? 'bill-info-label' : "label"}>{label}</Text>
 
             <TextInput
                 autoCapitalize="none"
@@ -29,7 +30,8 @@ const CustomInput = ({
                 onBlur={() => setIsFocused(false)}
                 placeholder={placeholder}
                 placeholderTextColor="#888"
-                className={cn('input', isFocused ? 'border-primary' : 'border-gray-300')}
+                className={cn(billInfo? 'bill-info-input' : 'input', isFocused ? 'border-primary' : 'border-gray-300')}
+                {...rest}
             />
         </View>
     )
