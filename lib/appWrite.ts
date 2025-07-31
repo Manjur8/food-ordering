@@ -11,7 +11,8 @@ export const appWriteConfig = {
     categoriesCollectionId: '686903f900206218e366',
     menuCollectionId: '6869041800116af0bdcd',
     customizationsCollectionId: '68690432000226b1deca',
-    menuCustomizationsCollectionId: '686a503a00246f389a13'
+    menuCustomizationsCollectionId: '686a503a00246f389a13',
+    ordersCollectionId: '688614d70014b8409e7a',
 }
 
 let client: Client;
@@ -119,3 +120,35 @@ export const getCategories = async () => {
         throw new Error(e as string);
     }
 }
+
+export const createOrder = async ({
+  userId,
+  cartItems,
+  totalPrice,
+  paymentId,
+}: {
+  userId: string;
+  cartItems: any[];
+  totalPrice: number;
+  paymentId?: string;
+}) => {
+  try {
+    const res = await databases.createDocument(
+      appWriteConfig.databaseId,
+      appWriteConfig.ordersCollectionId,
+      ID.unique(),
+      {
+        user_id: userId,
+        items: JSON.stringify(cartItems),
+        total_price: totalPrice,
+        payment_id: paymentId || '',
+        // createdAt: new Date().toISOString(),
+      }
+    );
+
+    return res;
+  } catch (error) {
+    console.error('❌ Failed to create order', error);
+    throw error;
+  }
+};
