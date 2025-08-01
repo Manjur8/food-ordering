@@ -1,3 +1,5 @@
+import { TextInputProps } from "react-native";
+
 interface CustomButtonProps {
     onPress?: () => void;
     title?: string;
@@ -7,13 +9,9 @@ interface CustomButtonProps {
     isLoading?: boolean;
 }
 
-interface CustomInputProps {
-    placeholder?: string;
-    value?: string;
-    onChangeText?: (text: string) => void;
-    label: string;
-    secureTextEntry?: boolean;
-    keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
+export interface CustomInputProps extends TextInputProps {
+  label: string;
+  billInfo?: boolean
 }
 export interface TabBarIconProps {
     focused: boolean;
@@ -22,6 +20,7 @@ export interface TabBarIconProps {
 }
 
 interface User extends Models.Document {
+    $id: string,
     name: string;
     email: string;
     avatar: string;
@@ -85,4 +84,22 @@ interface PaymentInfoStripeProps {
     value: string;
     labelStyle?: string;
     valueStyle?: string;
+}
+
+interface BillingInformationType {
+    fullName: string;
+    phone: string;
+    address: string;
+    pinCode: string;
+}
+
+type CartViewType = 'payment-summary' | 'billing-information'
+
+interface BillingInformationProps {
+    setCartView: React.Dispatch<React.SetStateAction<CartViewType>>
+}
+
+interface CheckoutScreenProps {
+    billingInformation: BillingInformationType,
+    setCartView: React.Dispatch<React.SetStateAction<CartViewType>>
 }
