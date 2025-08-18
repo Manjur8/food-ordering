@@ -103,3 +103,11 @@ interface CheckoutScreenProps {
     billingInformation: BillingInformationType,
     setCartView: React.Dispatch<React.SetStateAction<CartViewType>>
 }
+
+interface ProfileImageModalProps {
+  visible: boolean;
+  imageUri: string;
+  onClose: () => void;
+  onUpdate: () => void;
+  onDelete: () => void;
+}

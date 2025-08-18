@@ -1,5 +1,5 @@
 import { GetMenuParams } from '@/type';
-import { Account, Avatars, Client, Databases, ID, Query } from 'react-native-appwrite';
+import { Account, Avatars, Client, Databases, ID, Query, Storage } from 'react-native-appwrite';
 
 export const appWriteConfig = {
     endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT!,
@@ -26,6 +26,7 @@ client
 export const account = new Account(client);
 const databases = new Databases(client);
 const avatar = new Avatars(client);
+const storage = new Storage(client);
 
 export async function signIn(email: string, password: string) {
     try {
@@ -33,7 +34,6 @@ export async function signIn(email: string, password: string) {
 
         const accountDetails = await account.get();
         const avatarUrl = avatar.getInitialsURL(accountDetails.name).toString();
-        console.log(avatarUrl)
         return {...accountDetails, avatar: avatarUrl}
 
     } catch (error) {
@@ -151,4 +151,27 @@ export const createOrder = async ({
     console.error('❌ Failed to create order', error);
     throw error;
   }
+};
+
+export const updateProfilePicture = async (uri: {name: string, type: string, size: number, uri: string}, userId: string) => {
+  // upload file
+  const response = await storage.createFile(appWriteConfig.bucketId, ID.unique(), uri);
+
+  // get file preview url
+//   const fileUrl = storage.getFilePreviewURL(appWriteConfig.bucketId, response.$id);
+  const fileUrl = storage.getFileViewURL(appWriteConfig.bucketId, response.$id);
+
+//   const avatarUrl = (fileUrl as unknown as string)?.replace('preview', 'view')
+
+  // update user document with new avatar
+  await databases.updateDocument(appWriteConfig.databaseId, appWriteConfig.userCollectionId, userId, { avatar: fileUrl });
+
+  return { ...response, avatar: fileUrl };
+};
+
+export const deleteProfilePicture = async (userId: string) => {
+  // set avatar to null in database
+  await databases.updateDocument(appWriteConfig.databaseId, appWriteConfig.userCollectionId, userId, { avatar: null });
+
+  return { avatar: null };
 };

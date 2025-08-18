@@ -1,13 +1,54 @@
 import CustomButton from '@/components/CustomButton';
-import { signOut } from '@/lib/appWrite';
+import ProfileImageModal from '@/components/ProfileImageModal';
+import { appWriteConfig, signOut, updateProfilePicture } from '@/lib/appWrite';
 import useAuthStore from '@/store/auth.store';
+import { getProfilePic } from '@/utils/getProfilePic';
+import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import React, { useState } from 'react';
-import { Alert, Image, Text, View } from 'react-native';
+import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
 
 export default function Profile() {
-  const { setAuthenticated, user  } = useAuthStore();
+  const { setAuthenticated, user, setUser  } = useAuthStore();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const defaultAvatar = user?.avatar + `?name=${user?.name}`;
+
+  // Update Profile Picture
+  const handleUpdatePicture = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        quality: 0.7,
+        cameraType: ImagePicker.CameraType.front
+      });
+
+      if (!result.canceled) {
+        const file = result.assets[0];
+        const selectedImage = {name: file.fileName!, type: file.mimeType!, size: file.fileSize!, uri: file.uri}
+        // upload to AppWrite
+        const updatedProfilePicture = await updateProfilePicture(selectedImage, user!.$id);
+
+        setUser({...user!, avatar: updatedProfilePicture.avatar+`?project=${appWriteConfig.projectId}`}); // update global state
+        setModalVisible(false);
+      }
+    } catch (err: any) {
+      Alert.alert("Error", err.message);
+    }
+  };
+
+  // Delete Profile Picture
+  const handleDeletePicture = async () => {
+    // try {
+    //   const updatedUser = await deleteProfilePicture(user.$id);
+    //   setUser(updatedUser); // set avatar = null/default
+    //   setModalVisible(false);
+    // } catch (err: any) {
+    //   Alert.alert("Error", err.message);
+    // }
+  };
+
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -24,11 +65,13 @@ export default function Profile() {
 
   return (
     <View className="flex-1 items-center justify-center bg-white px-4">
-      <Image
-        source={{ uri: user?.avatar + `?name=${user?.name}` }} // Replace with dynamic user image
-        className="w-32 h-32 rounded-full border-2 border-gray-300 mb-6"
-        resizeMode="cover"
-      />
+      <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <Image
+          source={{ uri: getProfilePic(user?.avatar as string, user!)}} // Replace with dynamic user image
+          className="w-32 h-32 rounded-full border-2 border-gray-300 mb-6"
+          resizeMode="cover"
+          />
+      </TouchableOpacity>
       <Text className="text-2xl font-semibold mb-6">{user?.name}</Text>
 
       {/* <TouchableOpacity
@@ -42,6 +85,15 @@ export default function Profile() {
         title="Log Out" style={"bg-primary"}
         isLoading={isLoggingOut}
         onPress={handleLogout}
+      />
+
+      {/* Profile Picture Modal */}
+      <ProfileImageModal
+        visible={modalVisible}
+        imageUri={user?.avatar || defaultAvatar}
+        onClose={() => setModalVisible(false)}
+        onUpdate={handleUpdatePicture}
+        onDelete={handleDeletePicture}
       />
     </View>
   );
