@@ -1,7 +1,8 @@
 import CustomButton from '@/components/CustomButton';
 import ProfileImageModal from '@/components/ProfileImageModal';
-import { signOut, updateProfilePicture } from '@/lib/appWrite';
+import { createProfilePicture, deleteProfilePicture, signOut, updateProfilePicture } from '@/lib/appWrite';
 import useAuthStore from '@/store/auth.store';
+import { getFileIdFromUrl } from '@/utils/getFileIdFromUrl';
 import { getProfilePic } from '@/utils/getProfilePic';
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
@@ -25,12 +26,21 @@ export default function Profile() {
       });
 
       if (!result.canceled) {
+        const isCreateOrUpdate = defaultAvatar?.includes('/buckets/') ? 'update' : 'create';
         const file = result.assets[0];
         const selectedImage = {name: file.fileName!, type: file.mimeType!, size: file.fileSize!, uri: file.uri}
-        // upload to AppWrite
-        const updatedProfilePicture = await updateProfilePicture(selectedImage, user!.$id);
+        if(isCreateOrUpdate === 'create') {
+          const updatedProfilePicture = await createProfilePicture(selectedImage, user!.$id);
+          setUser({...user!, avatar: updatedProfilePicture.avatar.toString()}); // update global state
+        } else {
+          const fileId = getFileIdFromUrl(defaultAvatar);
+  
+          if(fileId) {
+            const updatedProfilePicture = await updateProfilePicture(selectedImage, user!.$id, fileId);
+            setUser({...user!, avatar: updatedProfilePicture.avatar.toString()}); // update global state
+          }
+        }
 
-        setUser({...user!, avatar: updatedProfilePicture.avatar.toString()}); // update global state
         setModalVisible(false);
       }
     } catch (err: any) {
@@ -40,13 +50,17 @@ export default function Profile() {
 
   // Delete Profile Picture
   const handleDeletePicture = async () => {
-    // try {
-    //   const updatedUser = await deleteProfilePicture(user.$id);
-    //   setUser(updatedUser); // set avatar = null/default
-    //   setModalVisible(false);
-    // } catch (err: any) {
-    //   Alert.alert("Error", err.message);
-    // }
+    const fileId = getFileIdFromUrl(defaultAvatar);
+
+    if(user && fileId) {
+      try {
+        const updatedAvatar = await deleteProfilePicture(user.$id, fileId, user.name);
+        setUser({...user, avatar: updatedAvatar.avatar.toString()}); // set avatar = null/default
+        setModalVisible(false);
+      } catch (err: any) {
+        Alert.alert("Error", err.message);
+      }
+    }
   };
 
 
