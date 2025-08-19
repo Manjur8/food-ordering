@@ -111,3 +111,10 @@ interface ProfileImageModalProps {
   onUpdate: () => void;
   onDelete: () => void;
 }
+
+interface ProfilePictureFile {
+    name: string,
+    type: string,
+    size: number, 
+    uri: string
+}
