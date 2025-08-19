@@ -1,6 +1,6 @@
 import CustomButton from '@/components/CustomButton';
 import ProfileImageModal from '@/components/ProfileImageModal';
-import { appWriteConfig, signOut, updateProfilePicture } from '@/lib/appWrite';
+import { signOut, updateProfilePicture } from '@/lib/appWrite';
 import useAuthStore from '@/store/auth.store';
 import { getProfilePic } from '@/utils/getProfilePic';
 import * as ImagePicker from "expo-image-picker";
@@ -30,7 +30,7 @@ export default function Profile() {
         // upload to AppWrite
         const updatedProfilePicture = await updateProfilePicture(selectedImage, user!.$id);
 
-        setUser({...user!, avatar: updatedProfilePicture.avatar+`?project=${appWriteConfig.projectId}`}); // update global state
+        setUser({...user!, avatar: updatedProfilePicture.avatar.toString()}); // update global state
         setModalVisible(false);
       }
     } catch (err: any) {
