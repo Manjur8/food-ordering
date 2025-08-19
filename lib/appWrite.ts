@@ -1,4 +1,4 @@
-import { GetMenuParams } from '@/type';
+import { GetMenuParams, ProfilePictureFile } from '@/type';
 import { Account, Avatars, Client, Databases, ID, Query, Storage } from 'react-native-appwrite';
 
 export const appWriteConfig = {
@@ -153,9 +153,9 @@ export const createOrder = async ({
   }
 };
 
-export const updateProfilePicture = async (uri: {name: string, type: string, size: number, uri: string}, userId: string) => {
+export const createProfilePicture = async (file: ProfilePictureFile, userId: string) => {
   // upload file
-  const response = await storage.createFile(appWriteConfig.bucketId, ID.unique(), uri);
+  const response = await storage.createFile(appWriteConfig.bucketId, ID.unique(), file);
 
   // get file preview url
 //   const fileUrl = storage.getFilePreviewURL(appWriteConfig.bucketId, response.$id);
@@ -169,9 +169,26 @@ export const updateProfilePicture = async (uri: {name: string, type: string, siz
   return { ...response, avatar: fileUrl };
 };
 
-export const deleteProfilePicture = async (userId: string) => {
-  // set avatar to null in database
-  await databases.updateDocument(appWriteConfig.databaseId, appWriteConfig.userCollectionId, userId, { avatar: null });
+export const deleteProfilePicture = async (userId: string, fileId: string, userName: string) => {
+    await storage.deleteFile(
+        appWriteConfig.bucketId,
+        fileId
+    );
 
-  return { avatar: null };
+    const avatarUrl =  avatar.getInitialsURL(userName);
+    // set avatar to null in database
+    await databases.updateDocument(appWriteConfig.databaseId, appWriteConfig.userCollectionId, userId, { avatar: avatarUrl });
+
+    return { avatar: avatarUrl };
 };
+
+
+export const updateProfilePicture = async (file: ProfilePictureFile, userId: string, fileId: string) => {
+    await storage.deleteFile(
+        appWriteConfig.bucketId,
+        fileId
+    );
+    const response = await createProfilePicture(file, userId)
+
+    return response;
+}
