@@ -8,7 +8,8 @@ const ProfileImageModal: React.FC<ProfileImageModalProps> = ({
   visible,
   imageUri,
   onClose,
-  onUpdate,
+  onUpdateCamera,
+  onUpdateGallery,
   onDelete,
 }) => {
   const { user  } = useAuthStore();
@@ -23,19 +24,35 @@ const ProfileImageModal: React.FC<ProfileImageModalProps> = ({
         />
 
         <View className="flex-row gap-4">
-          <TouchableOpacity
+          {/* <TouchableOpacity
             className="bg-blue-500 px-4 py-2 rounded-2xl"
             onPress={onUpdate}
           >
             <Text className="text-white font-semibold">Update</Text>
+          </TouchableOpacity> */}
+          
+          {/* Camera */}
+          <TouchableOpacity
+            className="bg-blue-500 px-4 py-3 rounded-2xl items-center"
+            onPress={onUpdateCamera}
+          >
+            <Text className="text-white font-semibold">Update from Camera</Text>
           </TouchableOpacity>
 
+          {/* Gallery */}
           <TouchableOpacity
+            className="bg-green-500 px-4 py-3 rounded-2xl items-center"
+            onPress={onUpdateGallery}
+          >
+            <Text className="text-white font-semibold">Update from Gallery</Text>
+          </TouchableOpacity>
+
+          {imageUri.includes('/buckets') && <TouchableOpacity
             className="bg-red-500 px-4 py-2 rounded-2xl"
             onPress={onDelete}
           >
             <Text className="text-white font-semibold">Delete</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>}
 
           <TouchableOpacity
             className="bg-gray-500 px-4 py-2 rounded-2xl"

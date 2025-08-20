@@ -17,13 +17,13 @@ export default function Profile() {
   const defaultAvatar = user?.avatar + `?name=${user?.name}`;
 
   // Update Profile Picture
-  const handleUpdatePicture = async () => {
+  const handleUpdatePicture = async (result: ImagePicker.ImagePickerResult) => {
     try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images'],
-        quality: 0.7,
-        cameraType: ImagePicker.CameraType.front
-      });
+      // const result = await ImagePicker.launchImageLibraryAsync({
+      //   mediaTypes: ['images'],
+      //   quality: 0.7,
+      //   cameraType: ImagePicker.CameraType.front
+      // });
 
       if (!result.canceled) {
         const isCreateOrUpdate = defaultAvatar?.includes('/buckets/') ? 'update' : 'create';
@@ -63,6 +63,49 @@ export default function Profile() {
     }
   };
 
+  // handle picking image (shared by camera/gallery)
+  const processImage = async (result: ImagePicker.ImagePickerResult) => {
+    try {
+      await handleUpdatePicture(result);
+      setModalVisible(false);
+    } catch (err: any) {
+      Alert.alert("Error", err.message);
+    }
+  };
+
+  // Camera
+  const handleUpdateFromCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission Required", "Camera permission is needed to take a photo.");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.7,
+      cameraType: ImagePicker.CameraType.front, // 👈 now it works
+    });
+
+    if (!result.canceled) {
+      await processImage(result);
+    }
+  };
+
+  // Gallery
+  const handleUpdateFromGallery = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      quality: 0.7,
+      cameraType: ImagePicker.CameraType.front
+    });
+
+    if (!result.canceled) {
+      await processImage(result);
+    }
+  };
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -106,7 +149,8 @@ export default function Profile() {
         visible={modalVisible}
         imageUri={user?.avatar || defaultAvatar}
         onClose={() => setModalVisible(false)}
-        onUpdate={handleUpdatePicture}
+        onUpdateCamera={handleUpdateFromCamera}
+        onUpdateGallery={handleUpdateFromGallery}
         onDelete={handleDeletePicture}
       />
     </View>

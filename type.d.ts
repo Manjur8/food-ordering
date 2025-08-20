@@ -108,7 +108,8 @@ interface ProfileImageModalProps {
   visible: boolean;
   imageUri: string;
   onClose: () => void;
-  onUpdate: () => void;
+  onUpdateCamera: () => void;
+  onUpdateGallery: () => void;
   onDelete: () => void;
 }
 
