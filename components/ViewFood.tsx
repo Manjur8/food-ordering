@@ -1,6 +1,7 @@
 import { appWriteConfig } from "@/lib/appWrite";
 import React from "react";
 import { Image, ScrollView, Text, View } from "react-native";
+import StarRatingDisplay from "./StarRatingDisplay";
 
 const ViewFood = () => {
     const imageUrl = `https://nyc.cloud.appwrite.io/v1/storage/buckets/6869046e00197673d156/files/686a60fe002dc710bc4d/view?project=${appWriteConfig.projectId}`;
@@ -12,28 +13,28 @@ const ViewFood = () => {
         </Text>
 
         {/* 2. Left Info + Right Image */}
-        <View className="flex-row justify-between items-center mb-6">
+        <View className="flex-row justify-between mb-6">
             {/* Left Info */}
             <View className="flex-col space-y-2">
-            <Text className="text-gray-200 mb-2">Burger</Text>
-            <Text className="text-gray-700 mb-2">⭐ Rating: 4.7</Text>
-            <Text className="text-gray-800 text-2xl font-bold mb-4">💲8.99</Text>
-            <View className="flex-row justify-between items-center mb-6 gap-5">
-                <View>
-                    <Text className="text-lg text-gray-200">🔥 Calories</Text>
-                    <Text className="text-gray-700 font-bold">450 kcal</Text>
+                <Text className="text-gray-200 mb-2">Burger</Text>
+                <StarRatingDisplay rating={3.0} />
+                <Text className="text-gray-800 text-2xl font-bold mb-4">💲8.99</Text>
+                <View className="flex-row justify-between items-center mb-6 gap-5">
+                    <View>
+                        <Text className="text-lg text-gray-200">🔥 Calories</Text>
+                        <Text className="text-gray-700 font-bold">450 kcal</Text>
+                    </View>
+                    <View>
+                        <Text className="text-lg text-gray-200">🥩 Protein</Text>
+                        <Text className="text-gray-700 font-bold">25g</Text>
+                    </View>
                 </View>
-                <View>
-                    <Text className="text-lg text-gray-200">🥩 Protein</Text>
-                    <Text className="text-gray-700 font-bold">25g</Text>
-                </View>
-            </View>
             </View>
 
             {/* Right Image */}
             <Image
             source={{ uri: imageUrl }}
-            className="w-32 h-32 rounded-xl"
+            className="w-60 h-60 rounded-xl"
             />
             {/* <Image source={{uri: "https://nyc.cloud.appwrite.io/v1/storage/buckets/6869046e00197673d156/files/686a60fe002dc710bc4d/view"}} className={"size-full"} resizeMode={"contain"} /> */}
         </View>
