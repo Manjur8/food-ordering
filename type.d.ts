@@ -7,6 +7,7 @@ interface CustomButtonProps {
     leftIcon?: React.ReactNode;
     textStyle?: string;
     isLoading?: boolean;
+    variant?: 'primary' | 'secondary' | string
 }
 
 export interface CustomInputProps extends TextInputProps {
