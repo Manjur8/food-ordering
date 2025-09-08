@@ -1,16 +1,16 @@
-import CartButton from "@/components/CartButton";
-import MenuCard from "@/components/MenuCard";
 import { getCategories, getMenu } from "@/lib/appWrite";
 import useAppwrite from "@/lib/useAppwrite";
-import { Category, MenuItem } from "@/type";
 import cn from "clsx";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
-import { FlatList, Text, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import CartButton from "@/components/CartButton";
 import Filter from "@/components/Filter";
-import SearchBar from "@/components/SearchBar";
+import MenuCard from "@/components/MenuCard";
+import Searchbar from "@/components/SearchBar";
+import { Category, MenuItem } from "@/type";
+import { FlatList, Text, View } from "react-native";
 // import seed from '@/lib/seed';
 
 const Search = () => {
@@ -55,7 +55,7 @@ const Search = () => {
                             <CartButton />
                         </View>
 
-                        <SearchBar />
+                        <Searchbar />
 
                         <Filter categories={categories! as unknown as Category[]} />
                     </View>
