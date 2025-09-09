@@ -192,3 +192,17 @@ export const updateProfilePicture = async (file: ProfilePictureFile, userId: str
 
     return response;
 }
+
+export const getProduct = async (documentId: string) => {
+    try {
+        const food = await databases.getDocument(
+            appWriteConfig.databaseId,
+            appWriteConfig.menuCollectionId,
+            documentId
+        )
+    
+        return food;
+    } catch(e) {
+        throw new Error(e as string)
+    }
+}
