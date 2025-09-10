@@ -1,4 +1,5 @@
-import { appWriteConfig } from "@/lib/appWrite";
+import { appWriteConfig, getProduct } from "@/lib/appWrite";
+import useAppwrite from "@/lib/useAppwrite";
 import React from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 import CartButton from "./CartButton";
@@ -7,7 +8,11 @@ import StarRatingDisplay from "./StarRatingDisplay";
 
 const ViewFood = () => {
     const imageUrl = `https://nyc.cloud.appwrite.io/v1/storage/buckets/6869046e00197673d156/files/686a60fe002dc710bc4d/view?project=${appWriteConfig.projectId}`;
+    const {data} = useAppwrite({fn: () => getProduct("686a614700351825be06")});
+
+    // console.log(data)
     return (
+        <View className="flex-1 bg-white">
         <ScrollView className="flex-1 bg-white p-4">
 
             <View className="flex-between flex-row w-full mb-4">
@@ -72,11 +77,35 @@ const ViewFood = () => {
             </Text>
         </View>
 
-        <View className="flex flex-column gap-4 mt-4">
-            <CustomButton title="Add to cart" />
-            <CustomButton title="Buy" />
-        </View>
         </ScrollView>
+        {/* Sticky bottom bar */}
+        <View className="absolute bottom-0 left-5 right-5 flex-row bg-white p-4 gap-2"
+            style={{
+                borderRadius: 50,
+                height: 80,
+                shadowColor: '#1a1a1a',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 5,
+                overflow: "hidden", // 🔑 prevents double-layer look
+            }}
+        >
+            <CustomButton
+            title="Add to Cart"
+            variant="secondary"
+            style="w-[50%]"
+            onPress={() => {}}
+            />
+            <CustomButton
+            title="Buy Now"
+            variant="primary"
+            style="w-[50%]"
+            onPress={() => {}}
+            />
+        </View>
+
+        </View>
     );
 };
 
